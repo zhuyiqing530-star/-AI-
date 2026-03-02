@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm config:*)",
+      "Bash(tail:*)",
+      "WebSearch",
+      "WebFetch(domain:www.d-id.com)",
+      "Bash(cd:*)",
+      "Bash(rm:*)"
+    ]
+  }
+}

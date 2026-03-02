@@ -11,17 +11,29 @@ const languages = [
   { code: "es", label: "Español", flag: "🇪🇸" },
 ];
 
-const styles = ["商品展示", "种草测评", "开箱视频", "对比评测"];
+const styles = [
+  { id: "showcase", label: "商品展示", icon: "🛍️" },
+  { id: "review", label: "种草测评", icon: "⭐" },
+  { id: "unbox", label: "开箱视频", icon: "📦" },
+  { id: "compare", label: "对比评测", icon: "⚖️" },
+];
 
 export default function GeneratePage() {
   const router = useRouter();
   const [selectedLangs, setSelectedLangs] = useState<string[]>(["en"]);
-  const [style, setStyle] = useState(styles[0]);
+  const [style, setStyle] = useState("showcase");
+  const [generating, setGenerating] = useState(false);
 
   const toggleLang = (code: string) => {
     setSelectedLangs((prev) =>
       prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
     );
+  };
+
+  const handleGenerate = () => {
+    setGenerating(true);
+    // 模拟生成过程
+    setTimeout(() => router.push("/preview"), 2000);
   };
 
   return (
@@ -37,11 +49,12 @@ export default function GeneratePage() {
             <button
               key={lang.code}
               onClick={() => toggleLang(lang.code)}
-              className={`rounded-lg border px-4 py-2 transition-colors ${
+              disabled={generating}
+              className={`rounded-lg border px-4 py-2 transition-all ${
                 selectedLangs.includes(lang.code)
-                  ? "border-primary bg-primary/10 text-primary"
+                  ? "border-primary bg-primary/10 text-primary scale-105"
                   : "border-border hover:border-primary/50"
-              }`}
+              } disabled:opacity-50`}
             >
               {lang.flag} {lang.label}
             </button>
@@ -55,15 +68,17 @@ export default function GeneratePage() {
         <div className="grid grid-cols-2 gap-3">
           {styles.map((s) => (
             <button
-              key={s}
-              onClick={() => setStyle(s)}
-              className={`rounded-lg border px-4 py-3 transition-colors ${
-                style === s
-                  ? "border-primary bg-primary/10 text-primary"
+              key={s.id}
+              onClick={() => setStyle(s.id)}
+              disabled={generating}
+              className={`rounded-lg border px-4 py-3 text-left transition-all ${
+                style === s.id
+                  ? "border-primary bg-primary/10 text-primary scale-[1.02]"
                   : "border-border hover:border-primary/50"
-              }`}
+              } disabled:opacity-50`}
             >
-              {s}
+              <span className="text-xl">{s.icon}</span>
+              <span className="ml-2">{s.label}</span>
             </button>
           ))}
         </div>
@@ -71,11 +86,18 @@ export default function GeneratePage() {
 
       {/* 生成按钮 */}
       <button
-        onClick={() => router.push("/preview")}
-        disabled={selectedLangs.length === 0}
-        className="w-full rounded-lg bg-primary py-3 text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
+        onClick={handleGenerate}
+        disabled={selectedLangs.length === 0 || generating}
+        className="w-full rounded-lg bg-primary py-3 text-white transition-colors hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        开始生成（{selectedLangs.length}个语言版本）
+        {generating ? (
+          <span className="flex items-center justify-center gap-2">
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            生成中...
+          </span>
+        ) : (
+          `开始生成（${selectedLangs.length}个语言版本）`
+        )}
       </button>
     </div>
   );

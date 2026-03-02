@@ -1,0 +1,9 @@
+{
+  "name": "cross-border-ai",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "api",
+    "extension"
+  ]
+}

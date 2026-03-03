@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+}
+
+body {
+  width: 380px;
+  min-height: 100vh;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f9fafb;
+  color: #111827;
+  margin: 0;
+}
+
+/* 评分进度条动画 */
+.score-bar {
+  transition: width 0.6s ease-in-out;
+}
+
+/* 流式文本区域 */
+.stream-box {
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}

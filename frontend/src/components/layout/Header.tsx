@@ -3,16 +3,19 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { href: "/", label: "首页" },
   { href: "/upload", label: "生成视频" },
+  { href: "/listing", label: "AI文案" },
   { href: "/dashboard", label: "工作台" },
 ];
 
 export function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur">
@@ -34,12 +37,24 @@ export function Header() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/login"
-            className="rounded-lg bg-primary px-4 py-2 text-sm text-white transition-colors hover:bg-primary-hover"
-          >
-            登录
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted">{user.name}</span>
+              <button
+                onClick={logout}
+                className="rounded-lg border border-border px-4 py-2 text-sm transition-colors hover:bg-secondary"
+              >
+                退出
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="rounded-lg bg-primary px-4 py-2 text-sm text-white transition-colors hover:bg-primary-hover"
+            >
+              登录
+            </Link>
+          )}
         </nav>
 
         {/* 移动端菜单按钮 */}
@@ -74,13 +89,22 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <Link
-              href="/login"
-              onClick={() => setMenuOpen(false)}
-              className="rounded-lg bg-primary px-3 py-2 text-center text-sm text-white hover:bg-primary-hover"
-            >
-              登录
-            </Link>
+            {user ? (
+              <button
+                onClick={() => { logout(); setMenuOpen(false); }}
+                className="rounded-lg border border-border px-3 py-2 text-center text-sm hover:bg-secondary"
+              >
+                退出（{user.name}）
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setMenuOpen(false)}
+                className="rounded-lg bg-primary px-3 py-2 text-center text-sm text-white hover:bg-primary-hover"
+              >
+                登录
+              </Link>
+            )}
           </div>
         </nav>
       )}

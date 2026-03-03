@@ -3,22 +3,33 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { register as registerApi } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !password) { setError("请填写所有字段"); return; }
     if (password.length < 8) { setError("密码至少8位"); return; }
     setError("");
     setLoading(true);
-    setTimeout(() => router.push("/dashboard"), 1000);
+    try {
+      const { token, user } = await registerApi(name, email, password);
+      login(token, user);
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "注册失败，请重试");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

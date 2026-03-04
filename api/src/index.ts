@@ -11,6 +11,8 @@ import { videosRouter } from './routes/videos';
 type Bindings = {
   DEEPSEEK_API_KEY: string;
   JWT_SECRET: string;
+  KLING_ACCESS_KEY: string;
+  KLING_SECRET_KEY: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
